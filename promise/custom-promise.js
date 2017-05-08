@@ -52,7 +52,9 @@
   }
 
   CustomPromise.prototype.catch = function(cb) {
-    this.rejected.push(cb);
+    if (typeof cb === 'function') {
+      this.rejected.push(cb);
+    }
 
     return this;
   }
