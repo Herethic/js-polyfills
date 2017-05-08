@@ -1,14 +1,23 @@
 (function() {
+  var RESOLVED_STATUS = 'Resolved';
+  var REJECTED_STATUS = 'Rejected';
+  var PENDING_STATUS = 'Pending';
+
   var CustomPromise = function(cb) {
     this.resolved = [];
     this.rejected = [];
-    this.isCancelled = false;
-    this.isReady = false;
+    this.status = PENDING_STATUS;
 
-    cb(this.resolve.bind(this), this.reject.bind(this));
+    try {
+      cb(this.resolve.bind(this), this.reject.bind(this));
+    } catch(ex) {
+      this.reject.call(this, ex);
+    }
   }
 
   CustomPromise.prototype.resolve = function(arg) {
+    this.status = RESOLVED_STATUS;
+
     var result;
     var flag = false;
     while (this.resolved.length && !flag) {
@@ -24,6 +33,8 @@
   }
 
   CustomPromise.prototype.reject = function(arg) {
+    this.status = REJECTED_STATUS;
+
     var result;
     var flag = false;
     while (this.rejected.length && !flag) {
