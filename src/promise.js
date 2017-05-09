@@ -20,8 +20,10 @@ Promise.prototype.resolve = function(arg) {
 
   var result;
   var flag = false;
+  var value = arg;
   while (this._resolved.length && !flag) {
-    result = this._resolved.shift()(arg);
+    result = this._resolved.shift()(value);
+    value = result || value;
     flag = result && typeof result.then === 'function';
   }
 
@@ -37,8 +39,10 @@ Promise.prototype.reject = function(arg) {
 
   var result;
   var flag = false;
+  var value = arg;
   while (this._rejected.length && !flag) {
-    result = this._rejected.shift()(arg);
+    result = this._rejected.shift()(value);
+    value = result || value;
     flag = result && typeof result.then === 'function';
   }
 
