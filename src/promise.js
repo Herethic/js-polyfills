@@ -104,4 +104,18 @@ Promise.all = function(promises) {
   });
 }
 
+Promise.race = function(promises) {
+  return new Promise(function(resolve, reject) {
+    promises.forEach(function(p) {
+      if (p && typeof p.then === 'function') {
+        p.then(function(value) {
+          resolve(value);
+        }, reject);
+      } else {
+        resolve(p);
+      }
+    });
+  });
+}
+
 module.exports = Promise;
