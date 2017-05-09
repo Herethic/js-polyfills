@@ -8,7 +8,7 @@ var Promise = function(cb) {
   this.status = PENDING_STATUS;
 
   try {
-    cb(this.resolve.bind(this), this.reject.bind(this));
+    setTimeout(cb.bind(this, this.resolve.bind(this), this.reject.bind(this)), 0);
   } catch(ex) {
     console.error(ex);
     this.reject.call(this, ex);
@@ -26,6 +26,7 @@ Promise.prototype.resolve = function(arg) {
     value = result || value;
     flag = result && typeof result.then === 'function';
   }
+  this.value = value;
 
   if (flag && this._resolved) {
     this._resolved.forEach(function(cb) {
@@ -45,6 +46,7 @@ Promise.prototype.reject = function(arg) {
     value = result || value;
     flag = result && typeof result.then === 'function';
   }
+  this.value = value;
 
   if (flag && this._resolved) {
     this._resolved.forEach(function(cb) {
@@ -53,14 +55,23 @@ Promise.prototype.reject = function(arg) {
   }
 }
 
-
 Promise.prototype.then = function(success, fail) {
   if (typeof success === 'function') {
-    this._resolved.push(success);
+    if (this.status === RESOLVED_STATUS) {
+      this._resolved.push(success);
+      this.resolve(this.value);
+    } else if (this.status === PENDING_STATUS) {
+      this._resolved.push(success);
+    }
   }
 
   if (typeof fail === 'function') {
-    this._rejected.push(fail);
+    if (this.status === REJECTED_STATUS) {
+      this._rejected.push(fail);
+      this.reject(this.value);
+    } else if (this.status === PENDING_STATUS) {
+      this._rejected.push(fail);
+    }
   }
 
   return this;
