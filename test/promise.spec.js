@@ -109,17 +109,15 @@ describe('Custom Promise', () => {
   xit('should handle js error', (done) => {
     new CustomPromise(asyncFunc)
       .then(function() {
-        cb('then');
+        done.fail('success should not be called');
       })
       .catch(function() {
-        expect(cb.calls.allArgs()).toEqual([['created']]);
         done();
       })
 
     function asyncFunc(resolve, reject) {
-      setTimeout(function(a) {
-        cb('created');
-        a();
+      setTimeout(function() {
+        null();
       }, 0);
     }
   });

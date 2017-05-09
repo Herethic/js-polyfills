@@ -7,12 +7,7 @@ var Promise = function(cb) {
   this._rejected = [];
   this.status = PENDING_STATUS;
 
-  try {
-    setTimeout(cb.bind(this, this.resolve.bind(this), this.reject.bind(this)), 0);
-  } catch(ex) {
-    console.error(ex);
-    this.reject.call(this, ex);
-  }
+  setTimeout(cb.bind(this, this.resolve.bind(this), this.reject.bind(this)), 0);
 }
 
 Promise.prototype.resolve = function(arg) {
