@@ -11,7 +11,7 @@
     "polyfills"
   ],
   "author": "Pavelyev Arthur",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "devDependencies": {
     "jasmine": "^2.6.0",
     "karma": "^1.7.0",
