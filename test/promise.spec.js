@@ -37,7 +37,7 @@ describe('Custom Promise', () => {
         done();
       })
       .catch(function() {
-        done.fail('catch has benn called');
+        done.fail('catch has been called');
       })
 
     function syncFunc(resolve, reject) {

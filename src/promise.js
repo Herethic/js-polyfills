@@ -2,6 +2,10 @@ var RESOLVED_STATUS = 'Resolved';
 var REJECTED_STATUS = 'Rejected';
 var PENDING_STATUS = 'Pending';
 
+var isPromise = function(obj) {
+  return obj && typeof obj.then === 'function'
+}
+
 var Promise = function(cb) {
   this._resolved = [];
   this._rejected = [];
@@ -19,7 +23,7 @@ Promise.prototype.resolve = function(arg) {
   while (this._resolved.length && !flag) {
     result = this._resolved.shift()(value);
     value = result || value;
-    flag = result && typeof result.then === 'function';
+    flag = isPromise(result);
   }
   this.value = value;
 
@@ -39,7 +43,7 @@ Promise.prototype.reject = function(arg) {
   while (this._rejected.length && !flag) {
     result = this._rejected.shift()(value);
     value = result || value;
-    flag = result && typeof result.then === 'function';
+    flag = isPromise(result);
   }
   this.value = value;
 
@@ -82,7 +86,7 @@ Promise.all = function(promises) {
 
   return new Promise(function(resolve, reject) {
     promises.forEach(function(p, index) {
-      if (p && typeof p.then === 'function') {
+      if (isPromise(p)) {
         p.then(function(value) {
           values[index] = value;
           if (++count === promises.length) {
@@ -102,7 +106,7 @@ Promise.all = function(promises) {
 Promise.race = function(promises) {
   return new Promise(function(resolve, reject) {
     promises.forEach(function(p) {
-      if (p && typeof p.then === 'function') {
+      if (isPromise(p)) {
         p.then(function(value) {
           resolve(value);
         }, reject);
