@@ -4,13 +4,13 @@
   "description": "The purpose of creating this package was studying js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start"
   },
   "keywords": [
     "js",
     "polyfills"
   ],
-  "author": "Pavelyav Arthur",
+  "author": "Pavelyev Arthur",
   "license": "MIT",
   "devDependencies": {
     "jasmine": "^2.6.0",
